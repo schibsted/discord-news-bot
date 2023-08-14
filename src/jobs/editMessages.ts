@@ -80,10 +80,6 @@ const editMessages = async (
             `Failed to edit message for item ${item.id}`
           );
         });
-        if (oldItem.newsValue < 50 && item.newsValue >= 50) {
-          logger.info(`Crossposted ${item.id} due to newsValue change to 80+`);
-          msg.crosspost();
-        }
       })
       .catch((err) => {
         if (err.code === RESTJSONErrorCodes.UnknownMessage) {
