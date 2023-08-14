@@ -70,9 +70,8 @@ const editMessages = async (
         await msg.edit({ embeds: [embed] }).catch((err) => {
           if (err.code === RESTJSONErrorCodes.UnknownMessage) {
             logger.error(
-              `Error editing message for item ${item.id}, message not found. Deleting database entry`
+              `Error editing message for item ${item.id}, message not found.`
             );
-            redisClient.del(String(item.id));
             return;
           }
 
