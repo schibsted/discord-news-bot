@@ -2,9 +2,11 @@
   "name": "vg-bot",
   "version": "0.0.1",
   "description": "VG siste nytt discord robot",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "dev": "npm run build && nodemon -e ts --watch src --exec npm run dev:start",
+    "dev:start": "npm run build && npm start",
     "start": "node dist/index.js"
   },
   "author": "Johannes Andersen",
