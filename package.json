@@ -1,0 +1,29 @@
+{
+  "name": "vg-bot",
+  "version": "0.0.1",
+  "description": "VG siste nytt discord robot",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "author": "Johannes Andersen",
+  "engines": {
+    "node": "20",
+    "npm": "9"
+  },
+  "dependencies": {
+    "deep-equal": "2.2.2",
+    "discord.js": "14.12.1",
+    "dotenv": "16.3.1",
+    "node-cron": "3.0.2",
+    "pino": "8.15.0",
+    "redis": "4.6.7",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@types/deep-equal": "1.0.1",
+    "@types/node-cron": "3.0.8",
+    "pino-pretty": "10.2.0"
+  }
+}
