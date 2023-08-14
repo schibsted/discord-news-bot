@@ -19,6 +19,11 @@ const postMessages = async (
         continue;
       }
 
+      await redisClient.set(
+          String(item.id),
+          JSON.stringify({ item: item, msgId: null })
+      );
+
       // If it's the first run, just save the item without posting it
       if (firstRun) {
         logger.debug(`Save only on first run: ${item.id}`);

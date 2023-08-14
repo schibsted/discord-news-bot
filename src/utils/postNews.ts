@@ -31,7 +31,7 @@ const postNews = async (client: Client, item: Item): Promise<string> => {
 
   const msg = await channel.send({ embeds: [embed] });
 
-  if (item.newsValue >= 50) {
+  if (item.newsValue >= 10) {
     logger.info(`Crossposting ${item.id} due to newsValue`);
     msg.crosspost();
   }
