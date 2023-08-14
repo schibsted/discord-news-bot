@@ -31,6 +31,8 @@ let firstRun = true;
 client.once(Events.ClientReady, async (c) => {
   logger.info(`Ready! Logged in as ${c.user.tag}`);
 
+  await c.user.setActivity('the news', { type: 3 });
+
   logger.info("Connecting to redis");
   await redisClient.connect();
   logger.info("Connected to redis");
