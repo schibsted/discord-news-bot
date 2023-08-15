@@ -5,15 +5,6 @@ const data = new SlashCommandBuilder()
     .setName('similarnews')
     .setDescription('Get similar news')
     .addStringOption(option => (
-        option.setName('search-similarity')
-            .setDescription('Enter search similarity')
-            .addChoices(
-                {
-                    name: 'Vg articles (recommended)',
-                    value: 'vg_articles_ada'
-                })
-            .setRequired(true)))
-    .addStringOption(option => (
         option.setName('articletitle')
             .setDescription('Enter article title')
             .setRequired(true)))
@@ -28,11 +19,12 @@ module.exports = {
     data: data,
     name: 'similarnews',
     execute: async (interaction: ChatInputCommandInteraction) => {
-        const searchSimilarity: string | null = interaction.options.getString('search-similarity');
         const articleTitle: string | null = interaction.options.getString('articletitle');
         const limit: number | null = interaction.options.getInteger('limit');
 
         await interaction.deferReply({ephemeral: true});
+
+        const searchSimilarity: string = 'vg_articles_ada';
 
         const response: Response = await fetch(`${process.env['VG_AI_URL']}/similarity_search/${searchSimilarity}`, {
             method: 'POST',
