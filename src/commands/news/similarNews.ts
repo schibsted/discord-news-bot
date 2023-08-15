@@ -11,18 +11,6 @@ const data = new SlashCommandBuilder()
                 {
                     name: 'Vg articles (recommended)',
                     value: 'vg_articles_ada'
-                },
-                {
-                    name: 'Kommune valget 2023',
-                    value: 'kommunevalaget_2023_ada'
-                },
-                {
-                    name: 'VG article latest',
-                    value: 'vg_articles_test_ada'
-                },
-                {
-                    name: 'Vkommune valget 2023',
-                    value: 'vkommunevlaget_2023_ada'
                 })
             .setRequired(true)))
     .addStringOption(option => (
@@ -43,6 +31,8 @@ module.exports = {
         const searchSimilarity: string | null = interaction.options.getString('search-similarity');
         const articleTitle: string | null = interaction.options.getString('articletitle');
         const limit: number | null = interaction.options.getInteger('limit');
+
+        await interaction.deferReply({ ephemeral: true });
 
         const response: Response = await fetch(`${process.env['VG_AI_URL']}/similarity_search/${searchSimilarity}`, {
             method: 'POST',
@@ -73,21 +63,19 @@ module.exports = {
                 });
             });
 
-            await interaction.deferReply({ ephemeral: true });
-
             await interaction.editReply({ embeds: embeds });
-        }
-
-        const embed = {
-            title: 'Noe gikk galt',
-            description: 'Prøv igjen senere',
-            color: 0xff0000,
-            timestamp: new Date().toISOString(),
-            footer: {
-                text: 'VG',
+        } else {
+            const embed = {
+                title: 'Noe gikk galt',
+                description: 'Prøv igjen senere',
+                color: 0xff0000,
+                timestamp: new Date().toISOString(),
+                footer: {
+                    text: 'VG',
+                }
             }
-        }
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
+        }
     }
 }
