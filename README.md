@@ -8,11 +8,11 @@ Stay up-to-date with the world's events by receiving timely news updates from VG
 - `/similarnews` - When a user search for a news article, the bot will return a list of similar news articles.
 
 ## 📝 Installation
-### Requirements
+### ✅ Requirements
 - [Node.js](https://nodejs.org/en/) v20 or higher
 - [Redis](https://redis.io/) v6 or higher
 
-### Setup
+### 📥 Setup
 1. Clone the repository
 2. Copy the `.env.example` file to `.env` and fill in the required values
 3. Install dependencies:
@@ -27,4 +27,7 @@ npm run build
 ```bash
 npm run start
 ```
+
+## 👏 Want to contribute?
+Feel free to contribute to this project by creating a pull request. All contributions are welcome!
 
