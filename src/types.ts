@@ -35,3 +35,21 @@ export interface LiveBlog extends DefaultProps {
 }
 
 export type Item = Article | Video | LiveBlog;
+
+export interface AIResponseType {
+  metadata: Metadata;
+  score: number;
+  text: string;
+}
+export interface Metadata {
+  authors?: (string)[] | null;
+  has_paywall: string | boolean;
+  id: string;
+  newsroom: string;
+  published_at: string;
+  section: string;
+  section_lvl2: string;
+  source: string;
+  tags?: (string)[] | null;
+  title: string;
+}
