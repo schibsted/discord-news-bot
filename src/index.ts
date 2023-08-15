@@ -1,6 +1,6 @@
 import "dotenv/config";
 import cron from "node-cron";
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits, Interaction, SlashCommandBuilder } from "discord.js";
 import { createClient } from "redis";
 
 import getLatestNews from "./utils/getLatestNews";
@@ -9,15 +9,20 @@ import getChannel from "./utils/getChannel";
 import cleanup from "./jobs/cleanupMessages";
 import editMessages from "./jobs/editMessages";
 import postMessages from "./jobs/postMessages";
+import * as fs from "fs";
 
 // Create discord client
+interface ClientWithCommands extends Client {
+  commands: Collection<string, any>
+}
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
-});
+}) as ClientWithCommands;
 
 // Configure redis client
 export const redisClient = createClient({
@@ -69,6 +74,47 @@ client.once(Events.ClientReady, async (c) => {
     firstRun = false;
     logger.info("Finished cron job");
   });
+});
+
+interface SlashCommandDefinition {
+  data: SlashCommandBuilder;
+  execute: Function;
+}
+
+// Slash command handler
+client.commands = new Collection<string, SlashCommandDefinition>();
+try {
+  const registerSlashCommandFolders: string[][] = [
+    ['news']
+  ];
+
+  for (let registerSlashCommandFolder of registerSlashCommandFolders) {
+    const commandFiles = fs.readdirSync(__dirname + '/commands/' + registerSlashCommandFolder)
+        .filter(file => file.endsWith('.js'));
+
+    for (const file of commandFiles) {
+      const command = require('./commands/' + registerSlashCommandFolder + '/' + file);
+      client.commands.set(command.name, command);
+    }
+  }
+} catch (e) {
+  logger.error(e, 'Could not load slash commands')
+}
+
+client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+
+  const { commandName } = interaction;
+
+  const slashCommand = client.commands.get(commandName);
+  if (!slashCommand) return;
+
+  try {
+    await slashCommand.execute(interaction);
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({ content: 'Well that didn\'t work, try another command maybe?', ephemeral: true });
+  }
 });
 
 // Login to discord
