@@ -6,8 +6,6 @@ const fs = require('node:fs');
 const clientId: string = process.env['DISCORD_CLIENT_ID']!;
 const guildId: string = process.env['DISCORD_SERVER_ID']!;
 
-console.log(process.env['NODE_ENV'])
-
 const rest: REST = new REST().setToken(process.env['DISCORD_TOKEN']!);
 console.log(rest);
 
@@ -28,8 +26,6 @@ console.log(rest);
                 commands.push(command.data);
             }
         }
-
-        console.log(commands)
 
         console.log('Started refreshing application (/) commands.');
 
