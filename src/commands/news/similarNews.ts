@@ -5,8 +5,8 @@ const data = new SlashCommandBuilder()
     .setName('similarnews')
     .setDescription('Get similar news')
     .addStringOption(option => (
-        option.setName('articletitle')
-            .setDescription('Enter article title')
+        option.setName('searchterm')
+            .setDescription('Enter a search term')
             .setRequired(true)))
     .addIntegerOption(option => (
         option.setName('limit')
@@ -19,7 +19,7 @@ module.exports = {
     data: data,
     name: 'similarnews',
     execute: async (interaction: ChatInputCommandInteraction) => {
-        const articleTitle: string | null = interaction.options.getString('articletitle');
+        const searchTerm: string | null = interaction.options.getString('searchterm');
         const limit: number | null = interaction.options.getInteger('limit');
 
         await interaction.deferReply({ephemeral: true});
@@ -32,7 +32,7 @@ module.exports = {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                query: articleTitle,
+                query: searchTerm,
                 limit: limit
             }),
         });
