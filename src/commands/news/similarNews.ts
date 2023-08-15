@@ -27,12 +27,12 @@ const data = new SlashCommandBuilder()
 module.exports = {
     data: data,
     name: 'similarnews',
-    execute: async (interaction: ChatInputCommandInteraction)=> {
+    execute: async (interaction: ChatInputCommandInteraction) => {
         const searchSimilarity: string | null = interaction.options.getString('search-similarity');
         const articleTitle: string | null = interaction.options.getString('articletitle');
         const limit: number | null = interaction.options.getInteger('limit');
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ephemeral: true});
 
         const response: Response = await fetch(`${process.env['VG_AI_URL']}/similarity_search/${searchSimilarity}`, {
             method: 'POST',
@@ -45,26 +45,7 @@ module.exports = {
             }),
         });
 
-        if (response.status === 200) {
-            const data = await response.json();
-
-            let embeds: object[] = [];
-
-            data.forEach((element: AIResponseType) => {
-                embeds.push({
-                    title: element.metadata.title,
-                    url: `https://www.vg.no/i/${element.metadata.id}`,
-                    description: element.text.length > 256 ? element.text.substring(0, 256) + '...' : element.text,
-                    color: 0xff0000,
-                    timestamp: new Date(),
-                    footer: {
-                        text: 'VG',
-                    },
-                });
-            });
-
-            await interaction.editReply({ embeds: embeds });
-        } else {
+        if (response.status !== 200) {
             const embed = {
                 title: 'Noe gikk galt',
                 description: 'Prøv igjen senere',
@@ -75,7 +56,26 @@ module.exports = {
                 }
             }
 
-            await interaction.reply({ embeds: [embed], ephemeral: true });
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
+
+        const data = await response.json();
+
+        let embeds: object[] = [];
+
+        data.forEach((element: AIResponseType) => {
+            embeds.push({
+                title: element.metadata.title,
+                url: `https://www.vg.no/i/${element.metadata.id}`,
+                description: element.text.length > 256 ? element.text.substring(0, 256) + '...' : element.text,
+                color: 0xff0000,
+                timestamp: new Date(),
+                footer: {
+                    text: 'VG',
+                },
+            });
+        });
+
+        await interaction.editReply({embeds: embeds});
     }
 }
