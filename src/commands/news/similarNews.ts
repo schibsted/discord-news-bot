@@ -55,7 +55,7 @@ module.exports = {
             }),
         });
 
-        if (response.status !== 200) {
+        if (response.status === 200) {
             const data = await response.json();
 
             let embeds: object[] = [];
@@ -65,7 +65,7 @@ module.exports = {
                     title: element.metadata.title,
                     url: `https://www.vg.no/i/${element.metadata.id}`,
                     description: element.text.length > 256 ? element.text.substring(0, 256) + '...' : element.text,
-                    color: 0x0099ff,
+                    color: 0xff0000,
                     timestamp: new Date(),
                     footer: {
                         text: 'VG',
